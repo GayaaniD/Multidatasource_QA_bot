@@ -13,16 +13,39 @@ This project is about how Langchain, a library designed for LLM (Large Language 
 ## Project Flow
 1. **Tools** :
 Wrapping External Data Sources. Here, we’ll create tools for Wikipedia, a custom website, and Arxiv:
-    - Wikipedia Tool
-    - Custom Website Tool (LangSmith Docs)
-    - Arxiv Tool
+    - **Wikipedia Tool** : The Wikipedia tool in this project is designed to fetch and process information from Wikipedia. It is built using the `WikipediaQueryRun` class from the `langchain_community.tools` module and the `WikipediaAPIWrapper` class from the `langchain_community.utilities` module.
+Here's a brief overview of how it works:
+      1. **WikipediaAPIWrapper** : This class is responsible for handling the Wikipedia API. It is initialized with two parameters:
+          - `top_k_results` : This parameter determines the maximum number of search results to return from a Wikipedia query.
+          - `doc_content_chars_max` : This parameter sets the maximum character limit for the content of a Wikipedia document.
+      
+      2. **WikipediaQueryRun** : This class uses the `WikipediaAPIWrapper` to run queries on Wikipedia. It is initialized with the `api_wrapper` parameter, which is an instance of the `WikipediaAPIWrapper` class.
+
+    - **Custom Website Tool (LangSmith Docs)** : The Custom Website Tool is designed to fetch and process information from a specific website, in this case, the LangSmith Docs. It uses several classes from the `langchain_community` and `langchain_openai` modules.
+Here's a brief overview of how it works:
+      1. **WebBaseLoader**: This class is responsible for loading documents from a specific website. It is initialized with the URL of the website.
+      
+      2. **RecursiveCharacterTextSplitter**: This class splits the loaded documents into chunks based on the specified chunk size and overlap.
+      
+      3. **FAISS**: This class creates a vector database from the split documents using the OpenAIEmbeddings.
+      
+      4. **create_retriever_tool**: This function creates a retriever tool from the vector database.
+         
+    - **Arxiv Tool** : The Arxiv Tool is designed to fetch and process information from the Arxiv database. It uses the `ArxivQueryRun` class from the `langchain_community.tools` module and the `ArxivAPIWrapper` class from the `langchain_community.utilities` module.
+Here's a brief overview of how it works:
+      1. **ArxivAPIWrapper**: This class is responsible for handling the Arxiv API. It is initialized with two parameters:
+          - `top_k_results`: This parameter determines the maximum number of search results to return from an Arxiv query.
+          - `doc_content_chars_max`: This parameter sets the maximum character limit for the content of an Arxiv document.
+      
+      2. **ArxivQueryRun**: This class uses the `ArxivAPIWrapper` to run queries on Arxiv. It is initialized with the `api_wrapper` parameter, which is an instance of the `ArxivAPIWrapper` class.
+      
 
 2. **Combining Tools and Creating the Agent**:
-  The agent employs the LLM and the pre-built prompt from Langchain Hub to decide which tool to use for each query.
+  This code combines the created tools into a list and utilises the create_openai_tools_agent function to create an agent. This agent employs the LLM and the pre-built prompt from Langchain Hub to decide which tool to use for each query.
 
-3. **Executing the Agent with Agent Executor**
+4. **Executing the Agent with Agent Executor**
    
-4. **Agent Execution and Response Flow**
+5. **Agent Execution and Response Flow**
    **The agent_executor.invoke method takes a dictionary as input, where the key “input” represents the user’s question. Here’s what happens when you execute a query**:
     - **Agent Takes Over** : The agent receives the user’s query.
     - **Decision Making with LLM** : The agent, using the LLM and the pre-defined prompt, determines the most suitable tool to address the query based on its understanding.
